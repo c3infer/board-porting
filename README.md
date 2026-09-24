@@ -52,9 +52,23 @@ matching `.bmap`. Run the two scripts in order after the board build.
 The host base image omits optional Rockchip graphics packages; the realm
 microbenchmark does not need them.
 
+## Deploy to the board
+
+Exit the build container. Check the target device with `lsblk`, write the SD
+card, then put the Radxa in Maskrom mode and flash SPI firmware:
+
+```sh
+sudo bmaptool copy board/debian-image-recipes/out/opencca-image-rockchip-rock5b-rk3588.img.gz /dev/sdX
+sudo ./board/opencca-flash/flash/flash.sh spi
+```
+
+Replace `/dev/sdX` with the complete SD-card block-device path. Boot the Radxa
+from that SD card before running any benchmark command below.
+
 ## Run the benchmark on the board
 
-Boot the Radxa from the built image and log in as `user`. Then run:
+After the SD card and SPI setup above, log in to the booted Radxa as `user`.
+Run the benchmark on the Radxa itself:
 
 ```sh
 python3 /home/user/microbenchmark/run.py all --trials 20 --iters 20
@@ -83,14 +97,6 @@ console log is retained. The image contains a generated benchmark key shared
 by the three guest disks for the two encrypted modes. It is a test key, not a
 secret credential. The runner needs root access to QEMU KVM, the realm console
 sockets, and `/dev/shm`; use `sudo` if the `user` account lacks that access.
-
-Outside it, write the SD card only after checking the target with `lsblk`, then
-flash a Maskrom-mode board:
-
-```sh
-sudo bmaptool copy board/debian-image-recipes/out/opencca-image-rockchip-rock5b-rk3588.img.gz /dev/sdX
-sudo ./board/opencca-flash/flash/flash.sh spi
-```
 
 ## Patches
 
