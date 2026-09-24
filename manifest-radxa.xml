@@ -11,10 +11,10 @@
 -->
 <manifest>
   <!-- HTTPS keeps a fresh, public clone independent of developer SSH setup. -->
-  <remote name="github" fetch="https://github.com/" />
-  <remote name="c3infer" fetch="https://github.com/c3infer/" />
-  <remote name="comet" fetch="https://github.com/comet-cc/" />
-  <remote name="opencca" fetch="https://github.com/opencca/" />
+  <remote name="github" fetch="ssh://git@github.com/" />
+  <remote name="c3infer" fetch="ssh://git@github.com/c3infer/" />
+  <remote name="comet" fetch="ssh://git@github.com/comet-cc/" />
+  <remote name="opencca" fetch="ssh://git@github.com/opencca/" />
 
   <default remote="github" revision="main" sync-j="8" />
 

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-BOARD=${BOARD_ROOT:-"$ROOT/board"}
+BOARD=${BOARD_ROOT:-"$ROOT/.."}
 cd "$BOARD"
 make -f opencca-build/docker/Makefile build
 make -f opencca-build/docker/Makefile start

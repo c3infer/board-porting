@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-BOARD=${BOARD_ROOT:-"$ROOT/board"}
+BOARD=${BOARD_ROOT:-"$ROOT/.."}
 OUT=${1:-"$BOARD/snapshot/build-provenance.tsv"}
 mkdir -p "$(dirname -- "$OUT")"
 

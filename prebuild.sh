@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-BOARD=${BOARD_ROOT:-"$ROOT/board"}
+BOARD=${BOARD_ROOT:-"$ROOT/.."}
 
 required=(linux linux-guest qemu-vmm tf-rmm trusted-firmware-a u-boot rkbin debos-fs debian-image-recipes opencca-build opencca-flash kvmtool External_modules)
 for project in "${required[@]}"; do

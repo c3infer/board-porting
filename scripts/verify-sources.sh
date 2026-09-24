@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-BOARD=${BOARD_ROOT:-"$ROOT/board"}
+BOARD=${BOARD_ROOT:-"$ROOT/.."}
 
 declare -A pins=(
   [linux]=7d5e91cae4ad6ab8fcc89d54a9a054d27972cb00
