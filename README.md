@@ -46,6 +46,8 @@ The host script stages that image, `snapshot/Image-guest`, and `lkvm` under
 the pinned Collabora signing key fails current Debian verification. The result is
 `debian-image-recipes/out/opencca-image-rockchip-rock5b-rk3588.img.gz` and a
 matching `.bmap`. Run the two scripts in order after the board build.
+The host base image omits optional Rockchip graphics packages; the realm
+microbenchmark does not need them.
 
 Outside it, write the SD card only after checking the target with `lsblk`, then
 flash a Maskrom-mode board:

@@ -46,7 +46,8 @@ python3 "$ROOT/scripts/prepare-host-recipe.py" \
 
 cd "$RECIPES"
 if [[ ! -f out/ospack-debian-arm64-trixie.tar.gz ]]; then
-    debos --artifactdir=out -t architecture:arm64 board-porting-ospack.yaml
+    debos --artifactdir=out -t architecture:arm64 -t gfx:false \
+        board-porting-ospack.yaml
 fi
 debos --artifactdir=out -t architecture:arm64 \
     -t platform:rock5b-rk3588 board-porting-image.yaml
