@@ -21,8 +21,12 @@ image = replace_once(
 anchor = '  - action: apt\n    description: install opencca packages'
 image = replace_once(
     image, anchor,
+    '  - action: apt\n'
+    '    description: Install QEMU runtime libraries\n'
+    '    packages: [zlib1g, libpixman-1-0, libfdt1, '
+    'libglib2.0-0t64, libslirp0]\n\n'
     '  - action: overlay\n'
-    '    description: Install realm disk, guest kernel and VM runner\n'
+    '    description: Install realm disk, guest kernel and VM runners\n'
     '    source: overlays/board-porting\n'
     '    destination: /home/user\n\n' + anchor,
 )

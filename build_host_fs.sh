@@ -11,7 +11,7 @@ PREBUILT="$RECIPES/prebuilt"
 
 for source in "$GUEST_FS" "$SNAPSHOT/Image-guest" \
     "$SNAPSHOT/idbloader.img" "$SNAPSHOT/u-boot.itb" \
-    "$SNAPSHOT/lkvm" \
+    "$SNAPSHOT/lkvm" "$SNAPSHOT/qemu-system-aarch64" \
     "$BOARD/opencca-assets/rk3588/rk3588_spl_loader_v1.08.111.bin" \
     "$RECIPES/opencca-image-rockchip-rk3588.yaml"; do
     if [[ ! -f "$source" ]]; then
@@ -32,6 +32,7 @@ mkdir -p "$OVERLAY/disks" "$PREBUILT/linux" \
 cp "$GUEST_FS" "$OVERLAY/disks/guest-fs.img"
 cp "$SNAPSHOT/Image-guest" "$OVERLAY/disks/Image"
 cp "$SNAPSHOT/lkvm" "$OVERLAY/lkvm"
+cp "$SNAPSHOT/qemu-system-aarch64" "$OVERLAY/qemu-system-aarch64"
 cp "${kernel_packages[-1]}" "$PREBUILT/linux/"
 cp "$SNAPSHOT/idbloader.img" "$SNAPSHOT/u-boot.itb" \
     "$PREBUILT/u-boot-rock5b-rk3588/"
