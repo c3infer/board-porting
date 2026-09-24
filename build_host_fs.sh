@@ -6,7 +6,7 @@ BOARD=${BOARD_ROOT:-"$ROOT/.."}
 RECIPES="$BOARD/debian-image-recipes"
 SNAPSHOT="$BOARD/snapshot"
 GUEST_FS="$BOARD/debos-fs/out/guest-fs.img"
-OVERLAY="$RECIPES/overlays/board-porting"
+OVERLAY="$RECIPES/overlays/board-porting-benchmark"
 PREBUILT="$RECIPES/prebuilt"
 
 for source in "$GUEST_FS" "$SNAPSHOT/Image-guest" \
@@ -27,12 +27,15 @@ if (( ${#kernel_packages[@]} == 0 )); then
     exit 1
 fi
 
-mkdir -p "$OVERLAY/disks" "$PREBUILT/linux" \
+mkdir -p "$OVERLAY/disks" "$OVERLAY/microbenchmark" "$PREBUILT/linux" \
     "$PREBUILT/u-boot-rock5b-rk3588" "$RECIPES/out"
-cp "$GUEST_FS" "$OVERLAY/disks/guest-fs.img"
+for realm in realm1 realm2 realm3; do
+    cp "$GUEST_FS" "$OVERLAY/disks/$realm.img"
+done
 cp "$SNAPSHOT/Image-guest" "$OVERLAY/disks/Image"
 cp "$SNAPSHOT/lkvm" "$OVERLAY/lkvm"
 cp "$SNAPSHOT/qemu-system-aarch64" "$OVERLAY/qemu-system-aarch64"
+cp "$ROOT/host-microbenchmark/run.py" "$OVERLAY/microbenchmark/run.py"
 cp "${kernel_packages[-1]}" "$PREBUILT/linux/"
 cp "$SNAPSHOT/idbloader.img" "$SNAPSHOT/u-boot.itb" \
     "$PREBUILT/u-boot-rock5b-rk3588/"

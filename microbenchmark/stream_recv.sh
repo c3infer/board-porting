@@ -11,7 +11,7 @@ OUT_FILE="$2"
 POLL_SLEEP="${3:-1}"
 TAG="${4:-RX}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-COMMON_UTILS="$SCRIPT_DIR/../common/crypto_utils.sh"
+COMMON_UTILS="$SCRIPT_DIR/crypto_utils.sh"
 
 now_ns() {
   date +%s%N
@@ -42,7 +42,7 @@ if command -v crypto_enabled >/dev/null 2>&1 && crypto_enabled; then
   dec_fail_total_ns=0
   while true; do
     ENC_TMP="$TMP_DIR/recv_payload.enc"
-    /root/rw_ivshmem -f "$DEV" -C "$ENC_TMP"
+    "$SCRIPT_DIR/rw_ivshmem" -f "$DEV" -C "$ENC_TMP"
     dec_t0_ns="$(now_ns)"
     if crypto_decrypt_file "$ENC_TMP" "$OUT_FILE"; then
       dec_t1_ns="$(now_ns)"
@@ -66,7 +66,7 @@ echo "$TAG: waiting for complete payload on $DEV using rw_ivshmem -R polling"
 
 while true; do
   HDR_FILE="$TMP_DIR/hdr.bin"
-  /root/rw_ivshmem -f "$DEV" -R 32 | head -c 32 > "$HDR_FILE"
+  "$SCRIPT_DIR/rw_ivshmem" -f "$DEV" -R 32 | head -c 32 > "$HDR_FILE"
 
   MAGIC="$(dd if="$HDR_FILE" bs=1 skip=8 count=8 2>/dev/null | tr -d '\000')"
   READY_RAW="$(od -An -t u4 -j24 -N4 "$HDR_FILE" 2>/dev/null | tr -d '[:space:]')"
@@ -80,7 +80,7 @@ while true; do
     # Confirm header is stable across two polls before dumping payload.
     sleep 0.1
     HDR_FILE2="$TMP_DIR/hdr2.bin"
-    /root/rw_ivshmem -f "$DEV" -R 32 | head -c 32 > "$HDR_FILE2"
+    "$SCRIPT_DIR/rw_ivshmem" -f "$DEV" -R 32 | head -c 32 > "$HDR_FILE2"
     MAGIC2="$(dd if="$HDR_FILE2" bs=1 skip=8 count=8 2>/dev/null | tr -d '\000')"
     READY2_RAW="$(od -An -t u4 -j24 -N4 "$HDR_FILE2" 2>/dev/null | tr -d '[:space:]')"
     LEN2_RAW="$(od -An -t u8 -j16 -N8 "$HDR_FILE2" 2>/dev/null | tr -d '[:space:]')"
@@ -95,7 +95,7 @@ while true; do
     echo "$TAG: payload ready and stable (len=$LENGTH), dumping..."
     if command -v crypto_enabled >/dev/null 2>&1 && crypto_enabled; then
       ENC_TMP="$TMP_DIR/recv_payload.enc"
-      /root/rw_ivshmem -f "$DEV" -D "$ENC_TMP"
+      "$SCRIPT_DIR/rw_ivshmem" -f "$DEV" -D "$ENC_TMP"
       if crypto_decrypt_file "$ENC_TMP" "$OUT_FILE"; then
         echo "$TAG: crypto=on decrypted payload"
       else
@@ -105,7 +105,7 @@ while true; do
         continue
       fi
     else
-      /root/rw_ivshmem -f "$DEV" -D "$OUT_FILE"
+      "$SCRIPT_DIR/rw_ivshmem" -f "$DEV" -D "$OUT_FILE"
       echo "$TAG: crypto=off"
     fi
     break

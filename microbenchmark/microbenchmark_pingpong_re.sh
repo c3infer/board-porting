@@ -2,12 +2,12 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-DEFAULT_KEY_FILE="$SCRIPT_DIR/../common/usecase_shared.key"
+DEFAULT_KEY_FILE="$SCRIPT_DIR/benchmark.key"
 
 DEV_IN="${MB_RE_DEV_IN:-/sys/bus/pci/devices/0000:00:03.0/resource2}"
 DEV_OUT="${MB_RE_DEV_OUT:-/sys/bus/pci/devices/0000:00:03.0/resource2}"
 
-MAX_PAYLOAD=262112
+MAX_PAYLOAD=240000
 
 usage() {
   cat >&2 <<EOF
@@ -34,7 +34,7 @@ make_frame() {
 CRYPTO_MODE="${USECASE_CRYPTO:-0}"
 KEY_FILE=""
 ITERS=20
-SIZES_CSV="1024,4096,16384,65536,131072,262112,1048576,10485760"
+SIZES_CSV="65536,262144,524288,1048576,10485760"
 
 while [ $# -gt 0 ]; do
   case "$1" in

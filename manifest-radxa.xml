@@ -3,7 +3,7 @@
   Reproducible Radxa Rock 5B CAEC/Mica build.
 
   Initialise this workspace with:
-    repo init -u file:///home/amir/mica/board-porting -m manifest-radxa.xml
+    repo init -u git@github.com:YOUR_GITHUB_USER/board-porting.git -m manifest-radxa.xml
     repo sync -j8 (with no clone bundle)
 
   `board/` deliberately preserves the layout expected by the OpenCCA Docker
@@ -15,12 +15,14 @@
   <remote name="c3infer" fetch="ssh://git@github.com/c3infer/" />
   <remote name="comet" fetch="ssh://git@github.com/comet-cc/" />
   <remote name="opencca" fetch="ssh://git@github.com/opencca/" />
+  <!-- Replace YOUR_GITHUB_USER with the owner of the published manifest. -->
+  <remote name="board-porting" fetch="ssh://git@github.com/YOUR_GITHUB_USER/" />
 
   <default remote="github" revision="main" sync-j="8" />
 
   <!-- Build orchestration, overlays and local patch series. -->
-  <project name="c3infer/board-porting" path="board/manifest"
-           revision="LOCAL-BOOTSTRAP-ONLY" />
+  <project name="board-porting" remote="board-porting" path="board/manifest"
+           revision="main" />
 
   <!-- Canonical C3Infer board stack.  These are immutable upstream commits. -->
   <project name="host-linux-opencca" remote="c3infer" path="board/linux"

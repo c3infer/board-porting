@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-DEFAULT_KEY_FILE="$SCRIPT_DIR/../common/usecase_shared.key"
+DEFAULT_KEY_FILE="$SCRIPT_DIR/benchmark.key"
 
 DEV_IN="${MB_RE_DEV_IN:-/sys/bus/pci/devices/0000:00:03.0/resource2}"
 DEV_OUT="${MB_RE_DEV_OUT:-/sys/bus/pci/devices/0000:00:03.0/resource2}"

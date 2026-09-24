@@ -2,12 +2,12 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-DEFAULT_KEY_FILE="$SCRIPT_DIR/../common/usecase_shared.key"
+DEFAULT_KEY_FILE="$SCRIPT_DIR/benchmark.key"
 
 DEV_TX="${MB_RG_DEV_TX:-/sys/bus/pci/devices/0000:00:03.0/resource2}"
 DEV_RX="${MB_RG_DEV_RX:-/sys/bus/pci/devices/0000:00:03.0/resource2}"
 
-MAX_PAYLOAD=262112
+MAX_PAYLOAD=240000
 
 usage() {
   cat >&2 <<EOF
@@ -39,7 +39,7 @@ make_frame() {
 CRYPTO_MODE="${USECASE_CRYPTO:-0}"
 KEY_FILE=""
 ITERS=20
-SIZES_CSV="1024,4096,16384,65536,131072,262112,1048576,10485760"
+SIZES_CSV="65536,262144,524288,1048576,10485760"
 CSV_OUT="$SCRIPT_DIR/pingpong_results_rg.csv"
 
 while [ $# -gt 0 ]; do
@@ -120,6 +120,18 @@ for raw in "${SIZES[@]}"; do
 
   chunks=$(( (size + MAX_PAYLOAD - 1) / MAX_PAYLOAD ))
 
+  # Prepare deterministic request frames before starting the timer.
+  for ((i=1; i<=ITERS; i++)); do
+    remaining="$size"
+    for ((c=1; c<=chunks; c++)); do
+      csize="$MAX_PAYLOAD"
+      if [ "$remaining" -lt "$MAX_PAYLOAD" ]; then csize="$remaining"; fi
+      req_header="RGREQ|size=${size}|iter=${i}|chunk=${c}|chunks=${chunks}|"
+      make_frame "$TMP_DIR/payload_${size}_iter${i}_chunk${c}.bin" "$csize" "$req_header"
+      remaining=$((remaining - csize))
+    done
+  done
+
   total_ns=0
   retry_noise_ns=0
   retry_miss_count=0
@@ -136,7 +148,6 @@ for raw in "${SIZES[@]}"; do
       payload_chunk="$TMP_DIR/payload_${size}_iter${i}_chunk${c}.bin"
       req_header="RGREQ|size=${size}|iter=${i}|chunk=${c}|chunks=${chunks}|"
       rsp_header="RERSP|size=${size}|iter=${i}|chunk=${c}|chunks=${chunks}|"
-      make_frame "$payload_chunk" "$csize" "$req_header"
 
       "$SCRIPT_DIR/stream_send.sh" "$DEV_TX" "$payload_chunk" 262144 "PP-RG-TX[size=${size}][${i}/${ITERS}][chunk=${c}/${chunks}]"
 

@@ -1,24 +1,22 @@
 # board-porting
 
-Reproducible Radxa Rock 5B board build using C3Infer's canonical host kernel,
-guest kernel, QEMU VMM, and RMM repositories. The manifest is a lockfile: all
-projects are pinned to immutable commits.
+Radxa Rock 5B build using C3Infer's host kernel, guest kernel, QEMU VMM, and
+RMM repositories. The board stack is pinned to immutable commits. The manifest
+project itself follows the published `main` branch.
 
 ## Bootstrap
 
-The repository is usable locally after its first commit:
+Publish this repository first. Replace `YOUR_GITHUB_USER` in
+`manifest-radxa.xml` and in the URL below with the GitHub account or
+organization that owns the repository:
 
 ```sh
 mkdir caec-radxa && cd caec-radxa
-repo init -u file:///home/amir/mica/board-porting -m manifest-local.xml
+repo init -u git@github.com:YOUR_GITHUB_USER/board-porting.git -m manifest-radxa.xml
 repo sync -j8 --no-clone-bundle
 ./board/manifest/prebuild.sh
 ```
-
-For a hosted version, replace the `file://` URL with the SSH URL of this
-repository and use `manifest-radxa.xml` after replacing its self-project URL
-with the hosted repository name. `repo sync` needs GitHub SSH access for the
-C3Infer projects.
+`repo sync` requires GitHub SSH access for the C3Infer projects.
 
 ## Build and deploy
 
@@ -37,18 +35,54 @@ Inside it:
 ./manifest/build_host_fs.sh
 ```
 
-The guest script builds `debos-fs/out/guest-fs.img` with the CAEC realm
-microbenchmark under `/root/usecases/rg_rn_re`. It omits the upstream optional
-custom script, which expects an `autorun.service` absent from this overlay.
-The host script stages that image, `snapshot/Image-guest`, `lkvm`, and the
-locally built `qemu-system-aarch64` under
-`/home/user` in the Radxa image. It invokes the pinned Debos recipe with an
-8 GB image size. Its generated ospack recipe uses Debian repositories because
-the pinned Collabora signing key fails current Debian verification. The result is
+The guest script builds `debos-fs/out/guest-fs.img` with the benchmark at
+`/root/microbenchmark`. It installs OpenSSL for the CBC and CTR modes and
+enables a boot-ready message on the `hvc0` console. It omits the upstream
+optional custom script, which expects an absent `autorun.service`.
+
+The host script makes **three full raw guest disks** from that image and
+installs them at `/home/user/disks/realm1.img`, `realm2.img`, and `realm3.img`.
+It also installs `snapshot/Image-guest`, `lkvm`, the locally built
+`qemu-system-aarch64`, and `/home/user/microbenchmark/run.py`. The Radxa image
+is 16 GB to hold all three disks. Its generated ospack recipe uses Debian
+repositories because the pinned Collabora signing key fails current Debian
+verification. The result is
 `debian-image-recipes/out/opencca-image-rockchip-rock5b-rk3588.img.gz` and a
 matching `.bmap`. Run the two scripts in order after the board build.
 The host base image omits optional Rockchip graphics packages; the realm
 microbenchmark does not need them.
+
+## Run the benchmark on the board
+
+Boot the Radxa from the built image and log in as `user`. Then run:
+
+```sh
+python3 /home/user/microbenchmark/run.py all --trials 20 --iters 20
+```
+
+The runner starts and stops QEMU realms for each trial. It measures boot time
+from QEMU start to the guest's `MB_READY` console message. It measures policy
+upload and attestation inside each guest. Attestation cases are realm1 with
+policy, realm1 without policy, realm1 with realm2, and realm1 with realm2 and
+realm3. Communication uses realm1 and realm2 with three modes: plain,
+AES-256-CBC with HMAC, and AES-256-CTR with HMAC. The payload sizes are 64 KiB,
+256 KiB, 512 KiB, 1 MiB, and 10 MiB. Each QEMU process uses one full raw disk;
+no QCOW2 overlay is used.
+
+CSV data and console logs go under `/home/user/microbenchmark/results/`.
+`attestation.csv` records boot, policy upload, and attestation durations in
+nanoseconds; `communication.csv` records round-trip times by mode and size.
+The runner also writes PNG plots in `results/plots/`. To replot saved CSVs:
+
+```sh
+python3 /home/user/microbenchmark/run.py plot
+```
+
+If a trial fails, its CSV row contains an error status and the corresponding
+console log is retained. The image contains a generated benchmark key shared
+by the three guest disks for the two encrypted modes. It is a test key, not a
+secret credential. The runner needs root access to QEMU KVM, the realm console
+sockets, and `/dev/shm`; use `sudo` if the `user` account lacks that access.
 
 Outside it, write the SD card only after checking the target with `lsblk`, then
 flash a Maskrom-mode board:

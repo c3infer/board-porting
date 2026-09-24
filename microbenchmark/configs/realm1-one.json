@@ -1,0 +1,4 @@
+{
+  "Self": "VM1",
+  "VM1": { "hash": 0x1, "is-gateway": true, "strict": false }
+}

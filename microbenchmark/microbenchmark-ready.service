@@ -1,0 +1,10 @@
+[Unit]
+Description=Signal microbenchmark realm boot readiness
+After=systemd-user-sessions.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'printf "MB_READY\n" > /dev/hvc0'
+
+[Install]
+WantedBy=multi-user.target

@@ -16,7 +16,7 @@ image_source, image_destination, ospack_source, ospack_destination = map(
 image = image_source.read_text()
 image = replace_once(
     image, '{{ $imagesize := or .imagesize "4GB" }}',
-    '{{ $imagesize := or .imagesize "8GB" }}',
+    '{{ $imagesize := or .imagesize "16GB" }}',
 )
 anchor = '  - action: apt\n    description: install opencca packages'
 image = replace_once(
@@ -25,9 +25,12 @@ image = replace_once(
     '    description: Install QEMU runtime libraries\n'
     '    packages: [zlib1g, libpixman-1-0, libfdt1, '
     'libglib2.0-0t64, libslirp0]\n\n'
+    '  - action: apt\n'
+    '    description: Install microbenchmark runner and plotting dependencies\n'
+    '    packages: [python3, python3-matplotlib]\n\n'
     '  - action: overlay\n'
     '    description: Install realm disk, guest kernel and VM runners\n'
-    '    source: overlays/board-porting\n'
+    '    source: overlays/board-porting-benchmark\n'
     '    destination: /home/user\n\n' + anchor,
 )
 image_destination.write_text(image)
