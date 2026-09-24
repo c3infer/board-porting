@@ -28,7 +28,8 @@
   <project name="guest-linux-opencca" remote="c3infer" path="board/linux-guest"
            revision="d327b9c9569cb41652f7e5c00e0257540793ee8b" upstream="main" />
   <project name="qemu-opencca" remote="c3infer" path="board/qemu-vmm"
-           revision="aee77fb938065b6db056eebf47cf91f570b3648c" upstream="main" />
+           revision="aee77fb938065b6db056eebf47cf91f570b3648c"
+           upstream="cca/2025-06-12" />
   <project name="rmm-opencca" remote="c3infer" path="board/tf-rmm"
            revision="e541593ef36a88403497b639b0ba803e66d35e7a"
            upstream="mica-rebase-rmi-rsi" sync-s="true" />
