@@ -37,15 +37,20 @@ Inside it:
 ./manifest/build_host_fs.sh
 ```
 
-The guest script builds `debos-fs/out/guest-fs.img`. The host script stages
-that image and `snapshot/Image-guest` in the host image overlay, then runs
-`debian-image-recipes/buildfs.sh`. Run them in this order after the board build.
+The guest script builds `debos-fs/out/guest-fs.img` with the CAEC realm
+microbenchmark under `/root/usecases/rg_rn_re`. It omits the upstream optional
+custom script, which expects an `autorun.service` absent from this overlay.
+The host script stages that image, `snapshot/Image-guest`, and `lkvm` under
+`/home/user` in the Radxa image. It invokes the pinned Debos recipe with an
+8 GB image size. The result is
+`debian-image-recipes/out/opencca-image-rockchip-rock5b-rk3588.img.gz` and a
+matching `.bmap`. Run the two scripts in order after the board build.
 
 Outside it, write the SD card only after checking the target with `lsblk`, then
 flash a Maskrom-mode board:
 
 ```sh
-./board/debian-image-recipes/disk_create.sh sdb
+sudo bmaptool copy board/debian-image-recipes/out/opencca-image-rockchip-rock5b-rk3588.img.gz /dev/sdX
 sudo ./board/opencca-flash/flash/flash.sh spi
 ```
 
