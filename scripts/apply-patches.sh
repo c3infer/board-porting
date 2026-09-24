@@ -12,6 +12,19 @@ while IFS='|' read -r project base patch_dir; do
   patches=("$ROOT/patches/$patch_dir"/*.patch)
   [[ -e "${patches[0]}" ]] || { echo "No patches for $project" >&2; exit 1; }
   actual=$(git -C "$tree" rev-parse HEAD)
+  if [[ "$actual" != "$base" ]]; then
+    already_applied=true
+    for patch in "${patches[@]}"; do
+      if ! git -C "$tree" apply --reverse --check "$patch"; then
+        already_applied=false
+        break
+      fi
+    done
+    if [[ "$already_applied" == true ]]; then
+      echo "$project patch series is already applied."
+      continue
+    fi
+  fi
   [[ "$actual" == "$base" ]] || {
     echo "$project is $actual, but patch series requires $base" >&2
     exit 1

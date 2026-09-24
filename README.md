@@ -98,11 +98,14 @@ sockets, and `/dev/shm`; use `sudo` if the `user` account lacks that access.
 
 ## Patches
 
-No historical CAEC patch is applied implicitly. First move a patch into the
-matching upstream C3Infer repository whenever possible. For a required local
-patch, add it below `patches/`, copy `series.conf.example` to `series.conf`,
-and declare the precise base SHA. `prebuild.sh` refuses to apply a series to a
-different base.
+`prebuild.sh` applies the patch listed in `patches/series.conf` to the pinned
+`opencca-flash` checkout. It adds a five-second timeout to the loader
+capability probe so `flash.sh spi` proceeds to transfer the SPL when `rcb`
+hangs in Maskrom mode. The patch is guarded by the exact upstream base SHA;
+`prebuild.sh` stops if the checkout has moved to a different revision.
+
+For any additional required local patch, add it below `patches/` and declare
+its project, precise base SHA, and patch directory in `patches/series.conf`.
 
 ## Current scope
 

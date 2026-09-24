@@ -1,0 +1,28 @@
+From 4dd7ef829494e240ada5c4406d3204af7a8b9686 Mon Sep 17 00:00:00 2001
+From: Amir <amir@localhost>
+Date: Thu, 24 Sep 2026 14:00:00 +0000
+Subject: [PATCH] flash: time out loader capability probe
+
+Some Rockchip devices accept the rcb command in Maskrom mode but never
+return a response. Bound the probe so transfer_loader can proceed to upload
+the SPL loader instead of hanging indefinitely.
+---
+ flash/flash.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/flash/flash.sh b/flash/flash.sh
+index 514a1e4..b82a509 100755
+--- a/flash/flash.sh
++++ b/flash/flash.sh
+@@ -227,7 +227,7 @@ function transfer_loader {
+     local cwd=$PWD
+ 
+     # Do not transfer loader if already transfered
+-    if $CMD rcb | grep -q "Capability:"; then
++    if timeout 5s $CMD rcb | grep -q "Capability:"; then
+         # rcb command will succeed if maskrom dirver 
+         # already flashed. we will see something like:
+         #   Capability:2F 03 00 00 00 00 00 00 
+-- 
+2.43.0
+
