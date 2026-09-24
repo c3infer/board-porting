@@ -12,7 +12,7 @@ organization that owns the repository:
 
 ```sh
 mkdir caec-radxa && cd caec-radxa
-repo init -u git@github.com:YOUR_GITHUB_USER/board-porting.git -m manifest-radxa.xml
+repo init -u git@github.com:c3infer/board-porting.git -m manifest-radxa.xml
 repo sync -j8 --no-clone-bundle
 ./board/manifest/prebuild.sh
 ```
