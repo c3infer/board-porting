@@ -4,7 +4,7 @@
 
   Initialise this workspace with:
     repo init -u file:///home/amir/mica/board-porting -m manifest-radxa.xml
-    repo sync -j8 --no-clone-bundle
+    repo sync -j8 (with no clone bundle)
 
   `board/` deliberately preserves the layout expected by the OpenCCA Docker
   build: the container mounts it at /opencca.
