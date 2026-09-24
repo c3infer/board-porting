@@ -34,7 +34,7 @@
 
   <!-- Board firmware, images, VM runner and deployment tooling. -->
   <project name="CAEC-paper/arm-trusted-firmware" path="board/trusted-firmware-a"
-           revision="CAEC" />
+           revision="a6b720dbf635441d19297898e0860fb989877cbe" upstream="CAEC" />
   <project name="CAEC-paper/u-boot" path="board/u-boot"
            revision="2580869f3410e0b2154800541b9dc375ac01321c" />
   <project name="rkbin" remote="opencca" path="board/rkbin"
