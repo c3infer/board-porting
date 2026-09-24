@@ -6,9 +6,7 @@ project itself follows the published `main` branch.
 
 ## Bootstrap
 
-Publish this repository first. Replace `YOUR_GITHUB_USER` in
-`manifest-radxa.xml` and in the URL below with the GitHub account or
-organization that owns the repository:
+Initialize the workspace from the published repository:
 
 ```sh
 mkdir caec-radxa && cd caec-radxa
