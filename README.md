@@ -42,7 +42,8 @@ microbenchmark under `/root/usecases/rg_rn_re`. It omits the upstream optional
 custom script, which expects an `autorun.service` absent from this overlay.
 The host script stages that image, `snapshot/Image-guest`, and `lkvm` under
 `/home/user` in the Radxa image. It invokes the pinned Debos recipe with an
-8 GB image size. The result is
+8 GB image size. Its generated ospack recipe uses Debian repositories because
+the pinned Collabora signing key fails current Debian verification. The result is
 `debian-image-recipes/out/opencca-image-rockchip-rock5b-rk3588.img.gz` and a
 matching `.bmap`. Run the two scripts in order after the board build.
 

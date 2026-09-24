@@ -40,11 +40,13 @@ cp "$BOARD/opencca-assets/rk3588/rk3588_spl_loader_v1.08.111.bin" \
 
 python3 "$ROOT/scripts/prepare-host-recipe.py" \
     "$RECIPES/opencca-image-rockchip-rk3588.yaml" \
-    "$RECIPES/board-porting-image.yaml"
+    "$RECIPES/board-porting-image.yaml" \
+    "$RECIPES/opencca-ospack-debian.yaml" \
+    "$RECIPES/board-porting-ospack.yaml"
 
 cd "$RECIPES"
 if [[ ! -f out/ospack-debian-arm64-trixie.tar.gz ]]; then
-    debos --artifactdir=out -t architecture:arm64 opencca-ospack-debian.yaml
+    debos --artifactdir=out -t architecture:arm64 board-porting-ospack.yaml
 fi
 debos --artifactdir=out -t architecture:arm64 \
     -t platform:rock5b-rk3588 board-porting-image.yaml
