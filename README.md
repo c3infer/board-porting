@@ -37,6 +37,10 @@ Inside it:
 ./manifest/build_host_fs.sh
 ```
 
+The guest script builds `debos-fs/out/guest-fs.img`. The host script stages
+that image and `snapshot/Image-guest` in the host image overlay, then runs
+`debian-image-recipes/buildfs.sh`. Run them in this order after the board build.
+
 Outside it, write the SD card only after checking the target with `lsblk`, then
 flash a Maskrom-mode board:
 
