@@ -1,0 +1,4 @@
+# project|base-commit|relative-patch-directory
+# linux|<exact-base-sha>|host-linux
+# linux-guest|<exact-base-sha>|guest-linux
+# tf-rmm|<exact-base-sha>|rmm

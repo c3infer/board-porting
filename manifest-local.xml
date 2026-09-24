@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Local-development entry point.  It checks this orchestration repository
+     out at board/manifest as well as using it as repo's manifest source. -->
+<manifest>
+  <remote name="local" fetch="file:///home/amir/mica/" />
+  <include name="manifest-radxa.xml" />
+  <remove-project name="c3infer/board-porting" />
+  <project name="board-porting" remote="local" path="board/manifest"
+           revision="main" />
+</manifest>
