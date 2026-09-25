@@ -91,13 +91,13 @@ The runner also writes PNG plots in `results/plots/`. To replot saved CSVs:
 python3 /home/user/microbenchmark/run.py plot
 ```
 
-If a trial fails, its CSV row contains an error status and the corresponding
+<!-- If a trial fails, its CSV row contains an error status and the corresponding
 console log is retained. The image contains a generated benchmark key shared
 by the three guest disks for the two encrypted modes. It is a test key, not a
 secret credential. The runner needs root access to QEMU KVM, the realm console
-sockets, and `/dev/shm`; use `sudo` if the `user` account lacks that access.
+sockets, and `/dev/shm`; use `sudo` if the `user` account lacks that access. -->
 
-## Patches
+<!-- ## Patches
 
 `prebuild.sh` applies the patch listed in `patches/series.conf` to the pinned
 `opencca-flash` checkout. It adds a five-second timeout to the loader
@@ -114,4 +114,4 @@ The four C3Infer sources are pinned to their current public HEAD commits. The
 firmware/image support projects use the known Rock 5B pins from the working
 Diode-CCA-derived board flow. A clean build will decide whether the C3Infer
 guest kernel already absorbs the CAEC guest patch series; if it does not, add
-only the still-required patches through the guarded patch mechanism above.
+only the still-required patches through the guarded patch mechanism above. -->
