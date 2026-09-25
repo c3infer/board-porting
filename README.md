@@ -34,23 +34,6 @@ Inside it:
 ./manifest/build_host_fs.sh
 ```
 
-The guest script builds `debos-fs/out/guest-fs.img` with the benchmark at
-`/root/microbenchmark`. It installs OpenSSL for the CBC and CTR modes and
-enables a boot-ready message on the `hvc0` console. It omits the upstream
-optional custom script, which expects an absent `autorun.service`.
-
-The host script makes **three full raw guest disks** from that image and
-installs them at `/home/user/disks/realm1.img`, `realm2.img`, and `realm3.img`.
-It also installs `snapshot/Image-guest`, `lkvm`, the locally built
-`qemu-system-aarch64`, and `/home/user/microbenchmark/run.py`. The Radxa image
-is 16 GB to hold all three disks. Its generated ospack recipe uses Debian
-repositories because the pinned Collabora signing key fails current Debian
-verification. The result is
-`debian-image-recipes/out/opencca-image-rockchip-rock5b-rk3588.img.gz` and a
-matching `.bmap`. Run the two scripts in order after the board build.
-The host base image omits optional Rockchip graphics packages; the realm
-microbenchmark does not need them.
-
 ## Deploy to the board
 
 Exit the build container. Check the target device with `lsblk`, write the SD
@@ -67,28 +50,10 @@ from that SD card before running any benchmark command below.
 ## Run the benchmark on the board
 
 After the SD card and SPI setup above, log in to the booted Radxa as `user`.
-Run the benchmark on the Radxa itself:
+Run the benchmark on the board itself:
 
 ```sh
 python3 /home/user/microbenchmark/run.py all --trials 20 --iters 20
-```
-
-The runner starts and stops QEMU realms for each trial. It measures boot time
-from QEMU start to the guest's `MB_READY` console message. It measures policy
-upload and attestation inside each guest. Attestation cases are realm1 with
-policy, realm1 without policy, realm1 with realm2, and realm1 with realm2 and
-realm3. Communication uses realm1 and realm2 with three modes: plain,
-AES-256-CBC with HMAC, and AES-256-CTR with HMAC. The payload sizes are 64 KiB,
-256 KiB, 512 KiB, 1 MiB, and 10 MiB. Each QEMU process uses one full raw disk;
-no QCOW2 overlay is used.
-
-CSV data and console logs go under `/home/user/microbenchmark/results/`.
-`attestation.csv` records boot, policy upload, and attestation durations in
-nanoseconds; `communication.csv` records round-trip times by mode and size.
-The runner also writes PNG plots in `results/plots/`. To replot saved CSVs:
-
-```sh
-python3 /home/user/microbenchmark/run.py plot
 ```
 
 <!-- If a trial fails, its CSV row contains an error status and the corresponding
