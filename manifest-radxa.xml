@@ -35,11 +35,13 @@
            revision="e541593ef36a88403497b639b0ba803e66d35e7a"
            upstream="mica-rebase-rmi-rsi" sync-s="true" />
 
-  <!-- Board firmware, images, VM runner and deployment tooling. -->
-  <project name="CAEC-paper/arm-trusted-firmware" path="board/trusted-firmware-a"
-           revision="a6b720dbf635441d19297898e0860fb989877cbe" upstream="CAEC" />
-  <project name="CAEC-paper/u-boot" path="board/u-boot"
-           revision="2580869f3410e0b2154800541b9dc375ac01321c" />
+  <!-- TF-A and U-Boot track OpenCCA's matching Systex25 firmware line. -->
+  <project name="arm-trusted-firmware" remote="opencca"
+           path="board/trusted-firmware-a" revision="opencca/systex25" />
+  <project name="u-boot" remote="opencca" path="board/u-boot"
+           revision="opencca/systex25" />
+
+  <!-- Board images, VM runner and deployment tooling. -->
   <project name="rkbin" remote="opencca" path="board/rkbin"
            revision="b0c100f1a260d807df450019774993c761beb79d" />
   <project name="debian-image-recipes" remote="opencca" path="board/debian-image-recipes"

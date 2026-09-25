@@ -1,8 +1,9 @@
 # board-porting
 
 Radxa Rock 5B build using C3Infer's host kernel, guest kernel, QEMU VMM, and
-RMM repositories. The board stack is pinned to immutable commits. The manifest
-project itself follows the published `main` branch.
+RMM repositories. The kernels, QEMU, and RMM are pinned to immutable commits;
+TF-A and U-Boot track OpenCCA's matching `opencca/systex25` branches. The
+manifest project itself follows the published `main` branch.
 
 ## Bootstrap
 
